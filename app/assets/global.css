@@ -1,0 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,300;8..144,500&display=swap");
+
+:root {
+	--accent-color: #64b0ac;
+	--darker-accent-color: #408783;
+}
+
+* {
+	box-sizing: border-box;
+	font-family: "Roboto Flex", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+	line-height: 1.65;
+	margin: 0;
+	padding: 0;
+	font-weight: 300;
+	user-select: none;
+	-webkit-user-drag: none;
+	appearance: none;
+}
+
+input,
+button {
+	font-size: 1em;
+}
+
+h1,
+h1 *,
+h2,
+h2 *,
+h3,
+h3 *,
+h4,
+h4 *,
+h5,
+h5 *,
+h6,
+h6 *,
+b {
+	font-weight: 500;
+	color: black;
+}
+
+h1 {
+	font-size: 2.65em;
+}
+
+.paragraph {
+	opacity: 0.8;
+}
+
+html,
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	overflow: hidden;
+}
+
+body {
+	font-size: min(0.6rem + 0.65vw, 1.25rem + 0.1vw);
+	overflow: hidden auto;
+	max-height: 100%;
+	scrollbar-color: #0000004b #00000010;
+	scrollbar-width: thin;
+}
+
+body::-webkit-scrollbar {
+	width: 7px;
+}
+
+body::-webkit-scrollbar-track {
+	background-color: #00000010;
+}
+
+body::-webkit-scrollbar-thumb {
+	background-color: #0000004b;
+}
+
+.three-d {
+	position: relative;
+	background: transparent;
+	isolation: isolate;
+}
+
+.three-d:is(:hover, :focus-within) {
+	transform: translate(var(--hover-delta-x), var(--hover-delta-y));
+}
+
+.three-d::before,
+.three-d::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	transition: inherit;
+}
+
+.three-d::after {
+	background-color: var(--bg, white);
+	z-index: -1;
+}
+
+.three-d::before {
+	background-color: var(--shadow, black);
+	top: var(--shadow-shrink, 0px);
+	left: var(--shadow-shrink, 0px);
+	width: calc(100% - var(--shadow-shrink, 0px) - var(--shadow-shrink, 0px));
+	height: calc(100% - var(--shadow-shrink, 0px) - var(--shadow-shrink, 0px));
+	z-index: -2;
+}
+
+.three-d:is(:hover, :focus-within)::before {
+	transform: translate(calc(var(--hover-delta-x) * -1), calc(var(--hover-delta-y) * -1));
+}
