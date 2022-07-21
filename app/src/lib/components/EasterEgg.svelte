@@ -104,8 +104,6 @@
         const from = bgm.volume;
         const to = animation.targetVolume;
 
-        console.log(from, to);
-
         const update = (time: number, startTime: number) => {
             const deltaTimeSinceStart = time - startTime;
             const progress = deltaTimeSinceStart / openCloseDuration;
@@ -126,7 +124,7 @@
         if (forceOpen == null) return toggleIsOpen(!currentlyOpen);
 
         el.style.left = forceOpen ? openValue : closeValue;
-        toggleBGM(forceOpen, { targetVolume: forceOpen ? 1 : 0 });
+        bgm && toggleBGM(forceOpen, { targetVolume: forceOpen ? 1 : 0 });
 
         el.style.transitionDuration = `${openCloseDuration}ms`;
         el.addEventListener("transitionend", () => el.style.transitionDuration = "", { once: true });
