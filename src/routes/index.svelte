@@ -77,7 +77,7 @@
 		transition-property: transform;
 	}
 
-	:global(button:is(:focus-visible)) {
+	:global(button:is(:focus-visible), a:is(:focus-visible)) {
 		outline: 1px dashed var(--focus-outline, #00000074);
 		outline-offset: 2px;
 	}
