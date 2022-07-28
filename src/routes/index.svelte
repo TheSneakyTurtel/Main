@@ -7,15 +7,21 @@
 	import heroBGNear1920 from "../../static/backgrounds/hero/near.w1920.webp";
 	import heroBGFar1920 from "../../static/backgrounds/hero/far.w1920.webp";
 
-	const heroElements: { element?: HTMLElement, speed: number, endingOpacity?: number }[] = [{ speed: .9 }, { speed: .6 }, { speed: .5, endingOpacity: 0 }];
+	const scrollAnimatedElements: ScrollAnimatedElement[] = [{ speed: 0.1, alreadyFixed: true }, { speed: 0.3, alreadyFixed: true }, { speed: 0.5, alreadyFixed: false }];
 
 	function update(ev: UIEvent) {
 		const target = ev.target as HTMLElement | undefined;
-		if (target) for (const heroElement of heroElements) {
-			if (!heroElement.element) continue;
+		if (target) for (const scrollAnimated of scrollAnimatedElements) {
+			if (!scrollAnimated.element) continue;
 
-			heroElement.element.style.transform = `translateY(${heroElement.speed * target.scrollTop}px)`;
+			scrollAnimated.element.style.transform = !scrollAnimated.alreadyFixed ? `translateY(${scrollAnimated.speed * target.scrollTop}px)` : `translateY(-${scrollAnimated.speed * target.scrollTop}px)`;
 		}
+	}
+
+	interface ScrollAnimatedElement {
+		element?: HTMLElement,
+		speed: number,
+		alreadyFixed?: boolean,
 	}
 </script>
 
@@ -24,12 +30,12 @@
 <ContentSection id="hero-section">
 	<EasterEgg />
 	<div slot="bg" id="hero-bg">
-		<img class="far" alt="" bind:this={heroElements[0].element} srcset="{heroBGFar600} 600w, {heroBGFar1920} 1920w" sizes="(max-width: 800px) 600px, 1920px" />
-		<img class="near" alt="" bind:this={heroElements[1].element} srcset="{heroBGNear600} 600w, {heroBGNear1920} 1920w" sizes="(max-width: 800px) 600px, 1920px" />
+		<img class="far" alt="" bind:this={scrollAnimatedElements[0].element} srcset="{heroBGFar600} 600w, {heroBGFar1920} 1920w" sizes="(max-width: 800px) 600px, 1920px" />
+		<img class="near" alt="" bind:this={scrollAnimatedElements[1].element} srcset="{heroBGNear600} 600w, {heroBGNear1920} 1920w" sizes="(max-width: 800px) 600px, 1920px" />
 	</div>
-	<div slot="content" id="hero-content" bind:this={heroElements[2].element}>
-		<h1>Welcome to my <span class="highlight" style="--highlight-dark: #d87cfc; --highlight-light: #e98eff;">personal website</span></h1>
-		<span>This is where you can find <span class="highlight" style="--highlight-light: #8bcbff; --highlight-dark: #7cbafc; font-weight: bold;">cool stuff</span> I make</span>
+	<div slot="content" id="hero-content" bind:this={scrollAnimatedElements[2].element}>
+		<h1>Welcome to my <span class="highlight" style="--highlight-dark: #532a85; --highlight-light: #7347a8;">personal website</span></h1>
+		<span class="subtitle">This is where you can find <span class="highlight" style="--highlight-light: #cc50ab; --highlight-dark: #b84098;">cool stuff</span> I make</span>
 	</div>
 </ContentSection>
 
@@ -38,7 +44,7 @@
 	</div>
 	<div slot="content" id="greeting-content">
 		<h2>Greetings!</h2>
-		<span>and welcome to this fine website made just for me!</span>
+		<span>And welcome to this fine website made just for me!</span>
 	</div>
 </ContentSection>
 
@@ -49,12 +55,11 @@
 <style>
 	:global(.highlight) {
 		display: inline-block;
-		transition: 0.125s cubic-bezier(0.165, 0.84, 0.44, 1);
+		transition: 0.125s ease;
 	}
 
 	:global(.highlight:hover) {
-		transform: translateY(-2px);
-		filter: grayscale(.5) brightness(1.2) drop-shadow(0 8px 6px #0000006b);
+		filter: brightness(1.2);
 	}
 
 	:global(button) {
@@ -82,17 +87,23 @@
 		transform: none !important;
 	}
 
-	h1 {
-		font-size: 2.65em;
-	}
-
 	:global(.content-section) {
 		padding: 8vh 8vw;
+		font-size: 1.5em;
+	}
+
+	h1 {
+		font-size: 2em;
 	}
 
 	:global(#hero-section) {
 		height: 100%;
-		margin-bottom: -2em;
+	}
+
+	#hero-bg {
+		max-height: 100%;
+		overflow: hidden;
+		position: fixed;
 	}
 
 	#hero-bg * {
@@ -113,17 +124,22 @@
 		width: 100%;
         height: 100%;
         z-index: 5;
-		background-color: #00000050;
+		/* background-color: #00000050; */
 	}
 	
 	#hero-content {
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
 		flex-direction: column;
+		padding-top: 25vh;
 		gap: 1em;
 		height: 100%;
 		position: relative;
+	}
+
+	#hero-content .subtitle {
+		opacity: .6;
 	}
 
 	:global(#hero-content *) {
@@ -132,19 +148,25 @@
 	}
 
 	:global(#greeting-section) {
-		width: max-content;
 		color: white;
 	}
 
 	#greeting-bg {
-		background-image: url("../../static/environment/bricks.svg");
-		background-position: top left;
-		background-color: transparent;
+		background-color: #ffffffea;
+		box-shadow: 0 -2px 18px #00000086;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
 	}
 
 	#greeting-content {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
+		gap: 2em;
+		color: black;
+	}
+
+	#greeting-content span {
+		opacity: .6;
 	}
 </style>
