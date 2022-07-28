@@ -1,69 +1,44 @@
 <script lang="ts">
 	import ContentSection from "../lib/components/ContentSection.svelte";
 	import EasterEgg from "../lib/components/EasterEgg.svelte";
-	import Project from "../lib/components/Project.svelte";
-
-	import { projects } from "../lib/utils/firebase";
 
 	import heroBGNear600 from "../../static/backgrounds/hero/near.w600.webp";
 	import heroBGFar600 from "../../static/backgrounds/hero/far.w600.webp";
 	import heroBGNear1920 from "../../static/backgrounds/hero/near.w1920.webp";
 	import heroBGFar1920 from "../../static/backgrounds/hero/far.w1920.webp";
 
-	const heroElements: { [key: string]: HTMLElement } = {};
+	const heroElements: { element?: HTMLElement, speed: number, endingOpacity?: number }[] = [{ speed: .9 }, { speed: .6 }, { speed: .5, endingOpacity: 0 }];
 
-	function updateParallax() {
-		const scrollY = document.body.scrollTop;
-		const { content, bgFar, bgNear } = heroElements;
+	function update(ev: UIEvent) {
+		const target = ev.target as HTMLElement | undefined;
+		if (target) for (const heroElement of heroElements) {
+			if (!heroElement.element) continue;
 
-		content.style.transform = `translateY(${scrollY * 0.5}px)`;
-		content.style.opacity = (1 - Math.max((scrollY - 250) * 0.002, 0)).toString();
-
-		bgNear.style.transform = `translateY(${scrollY * 0.725}px)`;
-
-		bgFar.style.transform = `translateY(${scrollY * 0.925}px)`;
+			heroElement.element.style.transform = `translateY(${heroElement.speed * target.scrollTop}px)`;
+		}
 	}
 </script>
 
-<svelte:body on:scroll|passive={updateParallax} />
+<svelte:window on:scroll|passive|capture={update} />
 
 <ContentSection id="hero-section">
 	<EasterEgg />
 	<div slot="bg" id="hero-bg">
-		<img class="near" alt="" bind:this={heroElements.bgNear} srcset="{heroBGNear600} 600w, {heroBGNear1920} 1920w" sizes="(max-width: 800px) 600px, 1920px" />
-		<img class="far" alt="" bind:this={heroElements.bgFar} srcset="{heroBGFar600} 600w, {heroBGFar1920} 1920w" sizes="(max-width: 800px) 600px, 1920px" />
+		<img class="far" alt="" bind:this={heroElements[0].element} srcset="{heroBGFar600} 600w, {heroBGFar1920} 1920w" sizes="(max-width: 800px) 600px, 1920px" />
+		<img class="near" alt="" bind:this={heroElements[1].element} srcset="{heroBGNear600} 600w, {heroBGNear1920} 1920w" sizes="(max-width: 800px) 600px, 1920px" />
 	</div>
-	<div slot="content" id="hero-content" bind:this={heroElements.content}>
-		<h1>Welcome to my <span class="highlight" style="color: #7cbafc">personal website</span></h1>
-		<span>This is where you can find <span class="highlight" style="color: #d87cfc">cool stuff</span> I make</span>
-	</div>
-</ContentSection>
-
-<ContentSection id="intro-section">
-	<div slot="bg" id="intro-bg" />
-	<div slot="content" id="intro-content">
-		<section class="text">
-			<h2>Hello, and welcome to my personal website</h2>
-			<p class="paragraph">
-				This is where I keep records of the hobby projects that I’ve made, you’re free to take a look, for inspiration if you’re a developer, for confirmation that i know how to code, or for any other reason too!
-			</p>
-		</section>
-		{#await projects then retrievedProjects}
-			<Project project={retrievedProjects[0]} mostRecent={true} />
-		{/await}
+	<div slot="content" id="hero-content" bind:this={heroElements[2].element}>
+		<h1>Welcome to my <span class="highlight" style="--highlight-dark: #d87cfc; --highlight-light: #e98eff;">personal website</span></h1>
+		<span>This is where you can find <span class="highlight" style="--highlight-light: #8bcbff; --highlight-dark: #7cbafc; font-weight: bold;">cool stuff</span> I make</span>
 	</div>
 </ContentSection>
 
-<ContentSection id="all-projects-invite-section">
-	<div slot="bg" id="all-projects-invite-bg" />
-	<div slot="content" id="all-projects-invite-content">
-		<h2>
-            So what are you waiting for? Take a look!
-        </h2>
-        <p class="paragraph">
-            Check these projects out! After all, you’ve been interested enough to scroll down here.
-        </p>
-        <button type="button" class="view-all-projects three-d">View all projects</button>
+<ContentSection id="greeting-section">
+	<div slot="bg" id="greeting-bg">
+	</div>
+	<div slot="content" id="greeting-content">
+		<h2>Greetings!</h2>
+		<span>and welcome to this fine website made just for me!</span>
 	</div>
 </ContentSection>
 
@@ -72,13 +47,6 @@
 </svelte:head>
 
 <style>
-    :global(:root) {
-        --hero-section-bg: #00000045;
-        --intro-section-bg: #f2f2f4;
-        --all-projects-invite-section-bg: #22242C;
-		--irregularity-size: 1.75em;
-    }
-
 	:global(.highlight) {
 		display: inline-block;
 		transition: 0.125s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -95,8 +63,8 @@
 		cursor: pointer;
 		color: white;
 		--bg: var(--accent-color);
-		--shadow: black;
-		--hover-delta-x: -3px;
+		--shadow: var(--darker-accent-color);
+		--hover-delta-x: 0px;
 		--hover-delta-y: -3px;
 		--shadow-shrink: 0px;
 
@@ -109,20 +77,26 @@
 		outline-offset: 2px;
 	}
 
-	:global(button:active::before),
-	:global(button:active) {
+	:global(button.three-d:active::before),
+	:global(button.three-d:active) {
 		transform: none !important;
+	}
+
+	h1 {
+		font-size: 2.65em;
+	}
+
+	:global(.content-section) {
+		padding: 8vh 8vw;
 	}
 
 	:global(#hero-section) {
 		height: 100%;
+		margin-bottom: -2em;
 	}
 
 	#hero-bg * {
-		width: 100%;
-		height: 100%;
 		object-fit: cover;
-		filter: saturate(1.5);
 		image-rendering: pixelated;
 		will-change: transform;
 	}
@@ -133,13 +107,13 @@
 
 	#hero-bg::after {
 		content: "";
-		position: absolute;
+		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
         height: 100%;
         z-index: 5;
-		background-color: var(--hero-section-bg);
+		background-color: #00000050;
 	}
 	
 	#hero-content {
@@ -154,82 +128,23 @@
 
 	:global(#hero-content *) {
 		will-change: transform;
+        text-align: center;
+	}
+
+	:global(#greeting-section) {
+		width: max-content;
 		color: white;
 	}
 
-	:global(#hero-section),
-	:global(#intro-section),
-	:global(#all-projects-invite-section) {
-		padding: calc(4em + var(--irregularity-size)) min(5vw + 1.5em, 10em) 4em;
+	#greeting-bg {
+		background-image: url("../../static/environment/bricks.svg");
+		background-position: top left;
+		background-color: transparent;
 	}
 
-    #intro-bg::after, #all-projects-invite-bg::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-	#intro-bg {
-        background-color: var(--hero-section-bg);
-	}
-
-	#intro-bg::after {
-		filter: drop-shadow(0 -4px 14px red);
-		clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 var(--irregularity-size));
-	}
-
-    #intro-bg::after, #all-projects-invite-bg {
-		background-color: var(--intro-section-bg);
-		background-image: url("../../static/stickers/x.svg");
-		background-size: 1em 1em;
-		background-repeat: space;
-    }
-
-	#intro-content {
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: 5em;
-	}
-
-	:global(#intro-content > *) {
+	#greeting-content {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		justify-content: center;
-		flex: 1 1 25em;
-		gap: 2em;
-		text-align: start;
-	}
-
-    #all-projects-invite-bg {
-		transform: translateY(-1px);
-    }
-
-    #all-projects-invite-bg::after {
-		transform: translateY(1px);
-        background-color: var(--all-projects-invite-section-bg);
-		clip-path: polygon(0 100%, 100% 100%, 100% var(--irregularity-size), 0 0);
-		box-shadow: 0 1px 0 var(--all-projects-invite-section-bg);
-    }
-
-    #all-projects-invite-content {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2em;
-    }
-
-    #all-projects-invite-content * {
-        color: white;
-		text-align: start;
-    }
-
-	#all-projects-invite-content .view-all-projects {
-		--hover-delta-x: 3px;
-		--focus-outline: #ffffff74;
 	}
 </style>

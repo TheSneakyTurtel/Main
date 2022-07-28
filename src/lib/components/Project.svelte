@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Project as ProjectModel } from "../models/Project";
 
-    export let project: ProjectModel;
+    export let project: ProjectModel | undefined;
     export let mostRecent: boolean;
 
     function open() {
@@ -10,23 +10,27 @@
 </script>
 
 <section class="project">
-    <header>
-        <h2>{project.name}</h2>
-        {#if mostRecent}
-            <small>Most recent project</small>
-        {/if}
-    </header>
-    <p class="paragraph">
-        {project.summary}
-    </p>
-    <footer>
-        <button class="open three-d" type="button">Open</button>
-        <section class="tags">
-            {#each project.tags as tag (tag)}
-                <div class="tag">{tag}</div>
-            {/each}
-        </section>
-    </footer>
+    {#if project}
+        <header>
+            <h2>{project.name}</h2>
+            {#if mostRecent}
+                <small>Most recent project</small>
+            {/if}
+        </header>
+        <p class="paragraph">
+            {project.summary}
+        </p>
+        <footer>
+            <button class="open three-d" type="button">Open</button>
+            <section class="tags">
+                {#each project.tags as tag (tag)}
+                    <div class="tag">{tag}</div>
+                {/each}
+            </section>
+        </footer>
+    {:else}
+    <h2>Loading {mostRecent ? "most recent project" : "project"}...</h2>
+    {/if}
 </section>
 
 <style>

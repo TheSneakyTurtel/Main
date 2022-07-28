@@ -12,7 +12,6 @@
     const absis: HTMLImageElement[] = [];
 
     onMount(() => {
-        console.log(bgm);
         bgm && bgm.addEventListener("play", () => {
             dependencies = dependencies || configure();
             update(dependencies);
@@ -23,7 +22,7 @@
         const sample = new Uint8Array(dependencies.analyser.frequencyBinCount);
         dependencies.analyser.getByteFrequencyData(sample);
 
-        for (let i = 0; i < absis.length; i++) {
+        if (absis && absis.length) for (let i = 0; i < absis.length; i++) {
             const value = sample[i] / 256;
             absis[i].style.setProperty("--value", value.toString());
         }
@@ -64,6 +63,7 @@
         max-height: 100%;
         object-fit: contain;
         transform: scale(calc(.75 + var(--value) * 0.25));
-        transition: transform 0.1s ease-out;
+        transition: transform 0.15s ease-out;
+        will-change: transform;
     }
 </style>
