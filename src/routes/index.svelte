@@ -2,11 +2,6 @@
 	import ContentSection from "../lib/components/ContentSection.svelte";
 	import EasterEgg from "../lib/components/EasterEgg.svelte";
 
-	import heroBGNear600 from "../../static/backgrounds/hero/near.w600.webp";
-	import heroBGFar600 from "../../static/backgrounds/hero/far.w600.webp";
-	import heroBGNear1920 from "../../static/backgrounds/hero/near.w1920.webp";
-	import heroBGFar1920 from "../../static/backgrounds/hero/far.w1920.webp";
-
 	const scrollAnimatedElements: ScrollAnimatedElement[] = [{ speed: 0.1, alreadyFixed: true }, { speed: 0.3, alreadyFixed: true }, { speed: 0.5, alreadyFixed: false }];
 
 	function update(ev: UIEvent) {
@@ -30,8 +25,8 @@
 <ContentSection id="hero-section">
 	<EasterEgg />
 	<div slot="bg" id="hero-bg">
-		<img class="far" alt="" bind:this={scrollAnimatedElements[0].element} srcset="{heroBGFar600} 600w, {heroBGFar1920} 1920w" sizes="(max-width: 800px) 600px, 1920px" />
-		<img class="near" alt="" bind:this={scrollAnimatedElements[1].element} srcset="{heroBGNear600} 600w, {heroBGNear1920} 1920w" sizes="(max-width: 800px) 600px, 1920px" />
+		<img class="far" alt="" bind:this={scrollAnimatedElements[0].element} srcset="../../static/backgrounds/hero/far.w600.webp 600w, ../../static/backgrounds/hero/far.w1920.webp" sizes="(max-width: 800px) 600px, 1920px" />
+		<img class="near" alt="" bind:this={scrollAnimatedElements[1].element} srcset="../../static/backgrounds/hero/near.w600.webp 600w, ../../static/backgrounds/hero/near.w1920.webp" sizes="(max-width: 800px) 600px, 1920px" />
 	</div>
 	<div slot="content" id="hero-content" bind:this={scrollAnimatedElements[2].element}>
 		<h1>Welcome to my <span class="highlight" style="--highlight-dark: #532a85; --highlight-light: #7347a8;">personal website</span></h1>
