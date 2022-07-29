@@ -1,81 +1,82 @@
 <script lang="ts">
-    import type { Project as ProjectModel } from "../models/Project";
+    import { goto } from "$app/navigation";
 
-    export let project: ProjectModel | undefined;
-    export let mostRecent: boolean;
+    import { fly, type FlyParams } from "svelte/transition";
+    import { quartOut } from "svelte/easing";
+
+    import type { Project } from "../models/Project";
+
+    export let project: Project;
+    export let flyInParams: FlyParams | undefined = undefined;
 
     function open() {
-        
+        goto(project.url);
     }
 </script>
 
-<section class="project">
-    {#if project}
-        <header>
-            <h2>{project.name}</h2>
-            {#if mostRecent}
-                <small>Most recent project</small>
-            {/if}
-        </header>
-        <p class="paragraph">
-            {project.summary}
-        </p>
-        <footer>
-            <button class="open three-d" type="button">Open</button>
-            <section class="tags">
-                {#each project.tags as tag (tag)}
-                    <div class="tag">{tag}</div>
-                {/each}
-            </section>
-        </footer>
-    {:else}
-    <h2>Loading {mostRecent ? "most recent project" : "project"}...</h2>
-    {/if}
+<section class="project" transition:fly={{ easing: quartOut, ...flyInParams }}>
+    <header>
+        <h2>{project.name}</h2>
+        <div class="metadata">
+            <span>Created on {project.createdAt.toDate().toLocaleDateString()}</span>
+            <span>Made using {project.madeUsing.join(", ")}</span>
+        </div>
+    </header>
+    <p class="summary">
+        {project.summary}
+    </p>
+    <button on:click={open} class="open" type="button">Open</button>
 </section>
 
 <style>
     .project {
+        flex: 1 1 auto;
 		padding: 2em;
-        max-width: 100%;
         background-color: white;
-        border: 1px solid hsl(0, 0%, 91%);
-        border-radius: 3px;
+        border-radius: 4px;
         box-shadow: 0 4px 8px -2px hsla(0, 0%, 0%, 0.175);
-
-		transition: 0.125s cubic-bezier(0.165, 0.84, 0.44, 1);
-		transition-property: transform;
-	}
-	
-	small, .tags {
-		opacity: .6;
-	}
-
-    header, footer {
         display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1em;
-    }
-
-    footer {
+        flex-direction: column;
+        align-items: flex-start;
         gap: 2em;
+		transition: 0.1s ease-out;
+	}
+
+    :global(body.dark-mode .project) {
+        background-color: #36383b !important;
     }
 
-    .tags {
-        max-height: 100%;
-        overflow-y: hidden;
-        line-height: 0;
+    header {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
-        font-size: 0.675em;
-        gap: 1.5em;
+        flex-wrap: wrap;
+        gap: 1em 2em;
     }
 
-    .tag {
-        padding: 0.35em 0.9em;
-        border-radius: 9999px;
-        background-color: #00000020;
-        border: 2px solid #00000010;
+    .metadata {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .open {
+        padding: 0.25em 0.75em;
+        border: none;
+        border-radius: 2px;
+        background-color: #AAC7FF;
+        color: white;
+        cursor: pointer;
+        transform: translateY(-1px);
+        box-shadow: 0 1px 3px #00000020;
+        transition: 0.1s ease-out;
+    }
+
+    .open:is(:hover, :focus-visible) {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 7px #00000020;
+    }
+
+    .open:active {
+        transform: translateY(1px);
+        box-shadow: 0 0 1px #00000020;
     }
 </style>

@@ -29,17 +29,28 @@
 		<img class="near" alt="" bind:this={scrollAnimatedElements[1].element} srcset="../../static/backgrounds/hero/near.w600.webp 600w, ../../static/backgrounds/hero/near.w1920.webp" sizes="(max-width: 800px) 600px, 1920px" />
 	</div>
 	<div slot="content" id="hero-content" bind:this={scrollAnimatedElements[2].element}>
-		<h1>Welcome to my <span class="highlight" style="--highlight-dark: #532a85; --highlight-light: #7347a8;">personal website</span></h1>
-		<span class="subtitle">This is where you can find <span class="highlight" style="--highlight-light: #cc50ab; --highlight-dark: #b84098;">cool stuff</span> I make</span>
+		<h1>Welcome to my <span class="highlight full-opacity" style="--highlight-dark: #532a85; --highlight-light: #7347a8;">personal website</span></h1>
+		<span class="subtitle">This is where you can find <span class="highlight full-opacity" style="--highlight-light: #cc50ab; --highlight-dark: #b84098;">cool stuff</span> I make</span>
 	</div>
 </ContentSection>
 
 <ContentSection id="greeting-section">
-	<div slot="bg" id="greeting-bg">
-	</div>
+	<div slot="bg" id="greeting-bg" />
 	<div slot="content" id="greeting-content">
-		<h2>Greetings!</h2>
-		<span>And welcome to this fine website made just for me!</span>
+		<section class="greeting">
+			<h2>Greetings!</h2>
+			<span>And welcome to this awesome website!</span>
+		</section>
+		<section class="short-qna">
+			<section tabindex="0">
+				<h3>What's this website for?</h3>
+				<p>for showcasing my masterpieces</p>
+			</section>
+			<section tabindex="0">
+				<h3>Is this website finished?</h3>
+				<p>the website is currently in early access</p>
+			</section>
+		</section>
 	</div>
 </ContentSection>
 
@@ -70,11 +81,6 @@
 
 		transition: 0.075s cubic-bezier(0.165, 0.84, 0.44, 1);
 		transition-property: transform;
-	}
-
-	:global(button:is(:focus-visible), a:is(:focus-visible)) {
-		outline: 1px dashed var(--focus-outline, #00000074);
-		outline-offset: 2px;
 	}
 
 	:global(button.three-d:active::before),
@@ -111,15 +117,8 @@
 		z-index: 1;
 	}
 
-	#hero-bg::after {
-		content: "";
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-        height: 100%;
-        z-index: 5;
-		/* background-color: #00000050; */
+	:global(body.dark-mode #hero-bg) {
+		filter: brightness(.25);
 	}
 	
 	#hero-content {
@@ -131,6 +130,10 @@
 		gap: 1em;
 		height: 100%;
 		position: relative;
+	}
+
+	:global(body.dark-mode #hero-content) {
+		color: white;
 	}
 
 	#hero-content .subtitle {
@@ -147,21 +150,68 @@
 	}
 
 	#greeting-bg {
-		background-color: #ffffffea;
+		background-image: linear-gradient(to top, #fff 50px, #ffffffea);
 		box-shadow: 0 -2px 18px #00000086;
 		border-top-left-radius: 8px;
 		border-top-right-radius: 8px;
+		transition: 0.1s ease-out;
+	}
+
+	:global(body.dark-mode #greeting-bg) {
+		filter: brightness(0.1);
 	}
 
 	#greeting-content {
 		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 2em;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 4em 4em;
 		color: black;
+		transition: 0.1s ease-out;
 	}
 
-	#greeting-content span {
-		opacity: .6;
+	:global(body.dark-mode #greeting-content) {
+		color: white !important;
+	}
+
+	#greeting-content .greeting {
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+	}
+
+	#greeting-content .short-qna {
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: column;
+		gap: 2em;
+	}
+
+	#greeting-content .short-qna > * {
+		background-color: #f0f2f5;
+		padding: 1.5em;
+		border-radius: 5px;
+		box-shadow: 0 1px 4px #00000020;
+		transition: 0.1s ease-out;
+	}
+
+	:global(body.dark-mode #greeting-content .short-qna > *) {
+		background-color: #494b4e !important;
+	}
+
+	#greeting-content .short-qna * {
+		line-height: 1;
+		transition: line-height 0.2s ease-out, opacity 0.1s ease-out, margin-top 0.2s, color 0.1s ease-out;
+	}
+
+	#greeting-content .short-qna > * * + * {
+		margin-top: 1em;
+	}
+
+	#greeting-content .short-qna > *:not(:is(:hover, :focus-visible)) p {
+		line-height: 0;
+		opacity: 0;
+		margin-top: 0;
 	}
 </style>

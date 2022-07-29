@@ -151,10 +151,16 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
-        transition: transform 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+        opacity: .5;
+        transition: 0.2s ease-out;
     }
 
-    .handle-container:hover {
+    :global(body.dark-mode .handle-container:not(:is(:hover, :focus-visible, :active))) {
+        opacity: .2 !important;
+    }
+
+    .handle-container:is(:hover, :focus-visible) {
+        opacity: 1;
         transform: translate(-100%, -20%);
     }
 

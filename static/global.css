@@ -42,8 +42,9 @@ b {
 	font-weight: 600;
 }
 
-.paragraph {
-	opacity: 0.8;
+span:not(.full-opacity),
+p:not(.full-opacity) {
+	opacity: 0.6;
 }
 
 @supports (-webkit-background-clip: text) {
@@ -75,7 +76,12 @@ body {
 	display: none;
 }
 
-.three-d {
+*:focus-visible {
+	outline: 1px dashed var(--focus-outline, #00000074);
+	outline-offset: 2px;
+}
+
+/* .three-d {
 	position: relative;
 	background: transparent;
 	isolation: isolate;
@@ -112,4 +118,4 @@ body {
 
 .three-d:is(:hover, :focus-within)::before {
 	transform: translate(calc(var(--hover-delta-x) * -1), calc(var(--hover-delta-y) * -1));
-}
+} */
